@@ -12,6 +12,13 @@ def main():
         print("Usage: python3.11 main.py <host_type> <url1> <url2> ...")
         return
 
+    host_type = argv[1]
+
+    # Check host from user is correct
+    if host_type != "2ch" and host_type != "archivach":
+        print('Incorrent host. Correct: "2ch" or "archivach"')
+        return
+
     links_and_folder_names = {}
 
     for link in argv[2:]:
@@ -22,7 +29,13 @@ def main():
             print(f"Incorrect link: {link}")
 
     for k, v in links_and_folder_names.items():
-        print(k + " : " + v)
+        downloader(host_type, k, v)
+
+
+def downloader(host_type, url, output_directory):
+    print(host_type)
+    print(url)
+    print(output_directory)
 
 
 if __name__ == "__main__":
