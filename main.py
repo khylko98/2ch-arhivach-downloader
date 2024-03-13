@@ -1,7 +1,7 @@
 import re
+import time
 
 from sys import argv
-
 
 FOLDER_NAME_FROM_LINK_PATTERN = r"/(\d+)(\.html)?(#.*)?/?$"
 
@@ -26,4 +26,7 @@ def main():
 
 
 if __name__ == "__main__":
+    start_time = time.time()
     main()
+    end_time = time.time()
+    print(f"Total processing time: {end_time - start_time} seconds")
