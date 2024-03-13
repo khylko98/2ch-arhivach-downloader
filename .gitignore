@@ -1,0 +1,39 @@
+# Compiled files
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS-generated files
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Dependency directories
+/node_modules
+/bower_components
+/venv
+
+# Compiled source code
+/dist
+/build
+
+# IDE-specific files
+/.idea
+/.vscode
+
+# Environment configuration files
+.env
+.env.local
+.env.*.local
+
+# Miscellaneous
+*.bak
+*.swp
