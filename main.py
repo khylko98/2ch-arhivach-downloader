@@ -1,7 +1,6 @@
 import os
 import re
 import requests
-import time
 
 from sys import argv
 from bs4 import BeautifulSoup
