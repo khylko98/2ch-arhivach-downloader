@@ -98,7 +98,4 @@ def downloader(output_path, host_type, url):
 
 
 if __name__ == "__main__":
-    start_time = time.time()
     main()
-    end_time = time.time()
-    print(f"Total processing time: {end_time - start_time} seconds")
