@@ -1,26 +1,34 @@
 import os
 import re
-import time
 import requests
+import time
 
 from sys import argv
 from bs4 import BeautifulSoup
 
+# Regular expression pattern to extract folder names from links
 FOLDER_NAME_FROM_LINK_PATTERN = r"/(\d+)(\.html)?(#.*)?/?$"
+
+# Constants for host URLs
 DVACH = "https://2ch.hk"
 ARCHIVACH = "https://arhivach.top"
 
+# Constants for media extensions
+IMAGE_EXT = [".jpg", ".png", ".gif"]
+VIDEO_EXT = [".mp4", ".webm"]
+
 
 def main():
-    # Get params from user input in console
+    # Check if enough arguments are provided
     if len(argv) < 3:
         print("Usage: python3.11 main.py <output_path> <url1> <url2> ...")
         return
 
-    output_path = argv[1]
+    output_path = argv[1]  # Output directory path
 
     links_and_folder_names = {}
 
+    # Extract links and folder names
     for link in argv[2:]:
         match = re.search(FOLDER_NAME_FROM_LINK_PATTERN, link)
         if match:
@@ -28,22 +36,24 @@ def main():
         else:
             print(f"Incorrect link: {link}")
 
+    # Download content from each link
     for k, v in links_and_folder_names.items():
         if "2ch" in k:
-            downloader(output_path, "2ch", k, v)
+            downloader(output_path + v, "2ch", k)
         elif "arhivach" in k:
-            downloader(output_path, "arhivach", k, v)
+            downloader(output_path + v, "arhivach", k)
 
 
-def downloader(output_path, host_type, url, folder_name):
+def downloader(output_path, host_type, url):
     try:
-        # Get response by url
+        # Get response from the URL
         response = requests.get(url)
 
+        # Check if the response is successful
         if response.status_code == 200:
-            # Parse response content
             soup = BeautifulSoup(response.content, "html.parser")
 
+            # Find links to download
             links = soup.find_all(
                 "a",
                 href=lambda href: href
@@ -56,26 +66,27 @@ def downloader(output_path, host_type, url, folder_name):
                 ),
             )
 
-            if not os.path.exists(f"{output_path}{folder_name}"):
-                os.makedirs(f"{output_path}{folder_name}")
+            # Create directory if it does not exist
+            if not os.path.exists(output_path):
+                os.makedirs(output_path)
 
+            # Download each file
             for link in links:
                 link_href = link["href"]
 
+                # Construct full URL based on host type
                 if host_type == "2ch":
                     path = DVACH + link_href
                 elif host_type == "arhivach":
-                    if any(
-                        extension in link_href for extension in [".jpg", ".png", ".gif"]
-                    ):
+                    if any(extension in link_href for extension in IMAGE_EXT):
                         path = ARCHIVACH + link_href
-                    elif any(extension in link_href for extension in [".mp4", ".webm"]):
+                    elif any(extension in link_href for extension in VIDEO_EXT):
                         path = link_href
 
-                filename = os.path.join(
-                    f"{output_path}{folder_name}", path.split("/")[-1]
-                )
+                # Extract filename from URL
+                filename = os.path.join(output_path, path.split("/")[-1])
 
+                # Download and save file
                 with open(filename, "wb") as file:
                     file.write(requests.get(path).content)
 
