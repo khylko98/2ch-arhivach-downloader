@@ -18,13 +18,18 @@ cd 2ch-archivach-downloader
 python3 -m venv venv
 ```
 
-**4. Install packages**
+**4. Activate virtual environment**
+```bash
+. ./venv/bin/activate
+```
+
+**5. Install packages**
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-**5. Run app**
+**6. Run app**
 
 ```bash
 python3 <output_path> <url1> <url2> ...
