@@ -9,7 +9,7 @@ git clone https://github.com/khylko98/2ch-archivach-downloader.git
 **2. Go to project folder**
 
 ```bash
-cd 2ch-archivach-downloader
+cd 2ch-arhivach-downloader
 ```
 
 **3. Create virtual environment**
