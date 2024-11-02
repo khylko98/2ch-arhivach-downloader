@@ -10,7 +10,7 @@ FOLDER_NAME_FROM_LINK_PATTERN = r"/(\d+)(\.html)?(#.*)?/?$"
 
 # Constants for host URLs
 DVACH = "https://2ch.hk"
-ARCHIVACH = "https://arhivach.top"
+ARHIVACH_DOMAINS = ["https://arhivach.top", "https://arhivach.xyz"]  # List of possible domains
 
 # Constants for media extensions
 IMAGE_EXT = [".jpg", ".png", ".gif"]
@@ -18,13 +18,11 @@ VIDEO_EXT = [".mp4", ".webm"]
 
 
 def main():
-    # Check if enough arguments are provided
     if len(argv) < 3:
-        print("Usage: python3.11 main.py <output_path> <url1> <url2> ...")
+        print("Usage: python main.py <output_path> <url1> <url2> ...")
         return
 
-    output_path = argv[1]  # Output directory path
-
+    output_path = argv[1]
     links_and_folder_names = {}
 
     # Extract links and folder names
@@ -36,33 +34,41 @@ def main():
             print(f"Incorrect link: {link}")
 
     # Download content from each link
-    for k, v in links_and_folder_names.items():
-        if "2ch" in k:
-            downloader(output_path + v, "2ch", k)
-        elif "arhivach" in k:
-            downloader(output_path + v, "arhivach", k)
+    for link, folder_name in links_and_folder_names.items():
+        if "2ch" in link:
+            downloader(output_path + folder_name, "2ch", link)
+        elif "arhivach" in link:
+            downloader(output_path + folder_name, "arhivach", link)
 
 
 def downloader(output_path, host_type, url):
-    try:
-        # Get response from the URL
-        response = requests.get(url)
+    if host_type == "2ch":
+        try_download(output_path, DVACH, url)
+    elif host_type == "arhivach":
+        # Try both domains
+        for domain in ARHIVACH_DOMAINS:
+            success = try_download(output_path, domain, url)
+            if success:
+                print(f"Successfully downloaded from {domain}")
+                break
+        else:
+            print(f"Failed to download from both {ARHIVACH_DOMAINS[0]} and {ARHIVACH_DOMAINS[1]}")
 
-        # Check if the response is successful
+
+def try_download(output_path, base_url, url):
+    """Attempt to download content from a given base URL."""
+    try:
+        # Modify the URL to use the given base URL
+        adjusted_url = url.replace("https://arhivach.top", base_url).replace("https://arhivach.xyz", base_url)
+        response = requests.get(adjusted_url)
+
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, "html.parser")
 
-            # Find links to download
+            # Find media links
             links = soup.find_all(
                 "a",
-                href=lambda href: href
-                and (
-                    href.endswith(".jpg")
-                    or href.endswith(".png")
-                    or href.endswith(".gif")
-                    or href.endswith(".mp4")
-                    or href.endswith(".webm")
-                ),
+                href=lambda href: isinstance(href, str) and any(href.endswith(ext) for ext in IMAGE_EXT + VIDEO_EXT),
             )
 
             # Create directory if it does not exist
@@ -72,28 +78,24 @@ def downloader(output_path, host_type, url):
             # Download each file
             for link in links:
                 link_href = link["href"]
+                if not link_href.startswith("http"):
+                    link_href = base_url + link_href
 
-                # Construct full URL based on host type
-                if host_type == "2ch":
-                    path = DVACH + link_href
-                elif host_type == "arhivach":
-                    if any(extension in link_href for extension in IMAGE_EXT):
-                        path = ARCHIVACH + link_href
-                    elif any(extension in link_href for extension in VIDEO_EXT):
-                        path = link_href
+                filename = os.path.join(output_path, link_href.split("/")[-1])
 
-                # Extract filename from URL
-                filename = os.path.join(output_path, path.split("/")[-1])
-
-                # Download and save file
+                # Download and save the file
                 with open(filename, "wb") as file:
-                    file.write(requests.get(path).content)
+                    file.write(requests.get(link_href).content)
 
                 print(f"Downloaded {filename} successfully!")
+
+            return True
         else:
-            print(f"Failed to download from {url}. Status code: {response.status_code}")
+            print(f"Failed to download from {adjusted_url}. Status code: {response.status_code}")
+            return False
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        print(f"An error occurred while trying {base_url}: {str(e)}")
+        return False
 
 
 if __name__ == "__main__":
