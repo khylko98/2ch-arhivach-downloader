@@ -10,7 +10,7 @@ FOLDER_NAME_FROM_LINK_PATTERN = r"/(\d+)(\.html)?(#.*)?/?$"
 
 # Constants for host URLs
 DVACH = "https://2ch.hk"
-ARHIVACH_DOMAINS = ["https://arhivach.top", "https://arhivach.xyz"]  # List of possible domains
+ARHIVACH_DOMAINS = ["https://arhivach.top", "https://arhivach.xyz"]
 
 # Constants for media extensions
 IMAGE_EXT = [".jpg", ".png", ".gif"]
@@ -52,14 +52,17 @@ def downloader(output_path, host_type, url):
                 print(f"Successfully downloaded from {domain}")
                 break
         else:
-            print(f"Failed to download from both {ARHIVACH_DOMAINS[0]} and {ARHIVACH_DOMAINS[1]}")
+            print(f"Failed to download from both {ARHIVACH_DOMAINS[0]} "
+                  f"and {ARHIVACH_DOMAINS[1]}")
 
 
 def try_download(output_path, base_url, url):
     """Attempt to download content from a given base URL."""
     try:
         # Modify the URL to use the given base URL
-        adjusted_url = url.replace("https://arhivach.top", base_url).replace("https://arhivach.xyz", base_url)
+        adjusted_url = url.replace(
+                "https://arhivach.top",
+                base_url).replace("https://arhivach.xyz", base_url)
         response = requests.get(adjusted_url)
 
         if response.status_code == 200:
@@ -68,7 +71,8 @@ def try_download(output_path, base_url, url):
             # Find media links
             links = soup.find_all(
                 "a",
-                href=lambda href: isinstance(href, str) and any(href.endswith(ext) for ext in IMAGE_EXT + VIDEO_EXT),
+                href=lambda href: isinstance(href, str) and
+                any(href.endswith(ext) for ext in IMAGE_EXT + VIDEO_EXT),
             )
 
             # Create directory if it does not exist
@@ -91,7 +95,8 @@ def try_download(output_path, base_url, url):
 
             return True
         else:
-            print(f"Failed to download from {adjusted_url}. Status code: {response.status_code}")
+            print(f"Failed to download from {adjusted_url}. "
+                  f"Status code: {response.status_code}")
             return False
     except Exception as e:
         print(f"An error occurred while trying {base_url}: {str(e)}")
