@@ -12,25 +12,27 @@ git clone https://github.com/khylko98/2ch-archivach-downloader.git
 cd 2ch-arhivach-downloader
 ```
 
-**3. Create virtual environment**
+**3. Install**
 
 ```bash
-python3 -m venv venv
+chmod +x install.sh
+```
+
+```bash
+./install.sh
+```
+
+```bash
+Python interpreter: <input_your_python_version>
 ```
 
 **4. Activate virtual environment**
 ```bash
-. ./venv/bin/activate
+source ./venv/bin/activate
 ```
 
-**5. Install packages**
+**5. Run app**
 
 ```bash
-pip3 install -r requirements.txt
-```
-
-**6. Run app**
-
-```bash
-python3 <output_path> <url1> <url2> ...
+python <output_path> <url1> <url2> ...
 ```
