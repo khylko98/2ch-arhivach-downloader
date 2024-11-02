@@ -22,9 +22,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-```bash
 Python interpreter: <input_your_python_version>
-```
 
 **4. Activate virtual environment**
 ```bash
