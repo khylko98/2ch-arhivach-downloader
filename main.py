@@ -10,7 +10,7 @@ FOLDER_NAME_FROM_LINK_PATTERN = r"/(\d+)(\.html)?(#.*)?/?$"
 
 # Constants for host URLs
 DVACH = "https://2ch.hk"
-ARHIVACH_DOMAINS = ["https://arhivach.top", "https://arhivach.xyz"]
+ARHIVACH_DOMAINS = ["https://arhivach.top", "https://arhivach.xyz", "https://arhivach.hk"]
 
 # Constants for media extensions
 IMAGE_EXT = [".jpg", ".png", ".gif"]
@@ -60,9 +60,7 @@ def try_download(output_path, base_url, url):
     """Attempt to download content from a given base URL."""
     try:
         # Modify the URL to use the given base URL
-        adjusted_url = url.replace(
-                "https://arhivach.top",
-                base_url).replace("https://arhivach.xyz", base_url)
+        adjusted_url = re.sub(r"https://arhivach\.\w+", base_url, url)
         response = requests.get(adjusted_url)
 
         if response.status_code == 200:
