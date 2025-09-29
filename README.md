@@ -1,36 +1,32 @@
-# Instruction
+## Установка и запуск
 
-**1. Clone repository**
-
+### 1. Клонируйте репозиторий
 ```bash
 git clone https://github.com/khylko98/2ch-archivach-downloader.git
+cd 2ch-archivach-downloader
 ```
 
-**2. Go to project folder**
-
-```bash
-cd 2ch-arhivach-downloader
-```
-
-**3. Install**
-
+### 2. Установите зависимости
 ```bash
 chmod +x install.sh
-```
-
-```bash
 ./install.sh
 ```
 
-Python interpreter: <input_your_python_version>
+Во время установки введите путь до Python (например, `python3.11`).
 
-**4. Activate virtual environment**
+### 3. Активируйте виртуальное окружение
 ```bash
 source ./venv/bin/activate
 ```
 
-**5. Run app**
-
+### 4. Запустите скрипт
 ```bash
-python <output_path> <url1> <url2> ...
+python main.py <папка_для_сохранения> <url1> <url2> ...
 ```
+
+Пример:
+```bash
+python main.py ./downloads https://2ch.hk/b/res/123456.html https://arhivach.top/thread/654321
+```
+
+Все изображения и видео будут сохранены в указанную папку.
