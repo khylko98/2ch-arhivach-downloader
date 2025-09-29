@@ -1,39 +1,21 @@
-# Compiled files
-*.class
-*.dll
-*.exe
-*.o
-*.so
+# Виртуальные окружения
+venv/
+.env/
 
-# Logs and databases
+# Кеши Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Кеши и логи
 *.log
-*.sql
-*.sqlite
 
-# OS-generated files
-.DS_Store
-ehthumbs.db
-Icon?
-Thumbs.db
-
-# Dependency directories
-/node_modules
-/bower_components
-/venv
-
-# Compiled source code
-/dist
-/build
-
-# IDE-specific files
-/.idea
-/.vscode
-
-# Environment configuration files
-.env
-.env.local
-.env.*.local
-
-# Miscellaneous
-*.bak
+# Конфиги IDE/редакторов
+.vscode/
+.idea/
 *.swp
+
+# Системные файлы
+.DS_Store
+Thumbs.db
